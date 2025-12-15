@@ -6,12 +6,10 @@ class UserBase(BaseModel):
     password: str | None = None
     full_name: str | None = None
 
-class UserCreate(BaseModel):
-    username: str | None = None
-    email: EmailStr | None = None
-    password: str | None = None
+class UserCreate(UserBase):
+    password: str
 
-class UserSchema(BaseModel):
+class UserSchema(UserBase):
     id: int
 
     class Config:
