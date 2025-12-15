@@ -21,6 +21,7 @@ class Settings(BaseSettings):
     DOMAIN = "localhost"
     ENVIRONMENT = Literal["local", "staging", "production"] = "local"
     JST_TOKEN = str
+    ALGORITHM = str
 
     @computed_field()
     @property

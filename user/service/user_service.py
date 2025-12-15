@@ -5,6 +5,8 @@ from core.db import get_session
 from user.model.user_model import User
 from user.schema.user_schema import UserSchema, BaseModel, UserCreate
 
+
+
 def get_users(db: Session):
     return db.query(User).all()
 

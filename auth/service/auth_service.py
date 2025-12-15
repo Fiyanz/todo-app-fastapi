@@ -1,0 +1,61 @@
+import jwt
+from jwt.exceptions import InvalidTokenError
+from core.config import settings
+from core.db import get_session
+from auth.model.auth_model import Token, TokerData
+from auth.uttil.pass_hash import verify_pass
+from fastapi.security import OAuth2PasswordBearer
+from fastapi import Depends, HTTPException, status
+from sqlalchemy.orm import Session
+from datetime import datetime, timedelta, timezone
+from user.model.user_model import User
+from user.service.user_service import get_user_by_email
+from typing import Annotated
+
+
+SECRET_CODE = settings.JST_TOKEN
+ALGORITHM = settings.ALGORITHM
+
+oauth2 = OAuth2PasswordBearer(tokenUrl="/api/v1/token")
+
+def authenticate_user(db: Session = Depends(get_session), email_user: str = None, password: str = None):
+    user = get_user_by_email(db, email_user)
+    if not user: return None
+    if not verify_pass(password, user.password):
+        return None
+    return None
+
+
+def create_access_token(data: dict, expires_delta: timedelta | None = None):
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.now(timezone.utc) + expires_delta
+    else:
+        expire = datetime.now(timezone.utc) + timedelta(minutes=15)
+
+    to_encode.update({"exp": expire})
+    encode_jwt_token = jwt.encode(to_encode, SECRET_CODE, algorithm=ALGORITHM)
+    return encode_jwt_token
+
+async def get_current_user(token: Annotated[str, Depends(oauth2)], db: Session = Depends(get_session)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        pyload = jwt.decode(token, SECRET_CODE, algorithms=ALGORITHM)
+        email = pyload.get("sub")
+        if email is None:
+            raise credentials_exception
+        token_data = TokerData(email=email)
+    except InvalidTokenError:
+        raise credentials_exception
+
+    user = get_user_by_email(db, token_data.email)
+    if user is None:
+        raise credentials_exception
+    return user
+
+def get_current_active_user(current_user: User = Depends(get_current_user)):
+    return current_user

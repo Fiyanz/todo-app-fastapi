@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from pydantic_core.core_schema import none_schema
 
 
 class Token(BaseModel):
@@ -8,4 +7,5 @@ class Token(BaseModel):
 
 class TokerData(BaseModel):
     email: str | None = None
+    username: str | None = None
 
