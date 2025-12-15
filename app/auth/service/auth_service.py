@@ -1,15 +1,15 @@
 import jwt
 from jwt.exceptions import InvalidTokenError
-from core.config import settings
-from core.db import get_session
-from auth.model.auth_model import Token, TokerData
-from auth.uttil.pass_hash import verify_pass
+from app.core.config import settings
+from app.core.db import get_session
+from app.auth.model.auth_model import TokerData
+from app.auth.uttil.pass_hash import verify_pass
 from fastapi.security import OAuth2PasswordBearer
 from fastapi import Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta, timezone
-from user.model.user_model import User
-from user.service.user_service import get_user_by_email
+from app.user.model.user_model import User
+from app.user.service.user_service import get_user_by_email
 from typing import Annotated
 
 

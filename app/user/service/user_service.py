@@ -1,9 +1,8 @@
 from sqlalchemy.orm import Session
 
-from auth.uttil.pass_hash import pass_hash
-from core.db import get_session
-from user.model.user_model import User
-from user.schema.user_schema import UserSchema, BaseModel, UserCreate
+from app.auth.uttil.pass_hash import pass_hash
+from app.user.model.user_model import User
+from app.user.schema.user_schema import UserCreate
 
 
 

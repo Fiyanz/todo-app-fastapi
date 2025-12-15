@@ -1,7 +1,7 @@
 from sqlalchemy.testing.schema import mapped_column
 from sqlalchemy.orm import Mapped
 from sqlalchemy import Integer, String, DateTime, Boolean
-from core.db import Base
+from app.core.db import Base
 
 from datetime import datetime, timezone
 
