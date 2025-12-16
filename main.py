@@ -1,13 +1,35 @@
 from fastapi import FastAPI
+from starlette.middleware.cors import CORSMiddleware
+from app.core.config import settings
+from app.auth.route.auth_route import auth_router
+from app.user.route.user_route import user_router
 
-app = FastAPI()
+openapi_tags = [
+    {
+        "name": "Users",
+        "description": "description",
+    },
+    {
+        "name": "Health Check",
+        "description": "Application Health check",
+    }
+]
+app = FastAPI(openapi_tags=openapi_tags)
 
+if settings.BACKEND_CORS_ORIGINS:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=[
+            str(origin).strip() for origin in settings.BACKEND_CORS_ORIGINS
+        ],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"]
+    )
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+app.include_router(auth_router, prefix=settings.API_PREFIX)
+app.include_router(user_router, prefix=settings.API_PREFIX, tags=["Users"])
+@app.get("/health")
+async def read_root():
+    return {"health": "true"}
 
-
-@app.get("/hello/{name}")
-async def say_hello(name: str):
-    return {"message": f"Hello {name}"}

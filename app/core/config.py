@@ -23,6 +23,8 @@ class Settings(BaseSettings):
     JST_TOKEN = str
     ALGORITHM = str
 
+    API_PREFIX = "/api/v1"
+
     @computed_field()
     @property
     def server_host(self) -> str:
