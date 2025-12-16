@@ -3,7 +3,8 @@ from sqlalchemy.orm import Session
 from app.auth.service.auth_service import get_current_active_user
 from app.user.model.user_model import User
 from app.user.schema.user_schema import UserSchema, UserCreate
-from app.user.service.user_service import get_users, get_user, get_session, create_user
+from app.user.service.user_service import get_users, get_user, create_user
+from app.core.db import get_session
 
 user_router = APIRouter()
 

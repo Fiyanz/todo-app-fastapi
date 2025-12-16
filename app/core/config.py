@@ -46,7 +46,7 @@ class Settings(BaseSettings):
     @property
     def MYALCHEMY_DATABASE_URL(self) -> str:
         return str(MultiHostUrl.build(
-            scheme="mysql",  # atau "mysql+pymysql" jika pakai driver pymysql
+            scheme="mysql+pymysql",  # atau "mysql+pymysql" jika pakai driver pymysql
             username=self.MYSQL_USERNAME,
             password=self.MYSQL_PASSWORD,
             host=self.MYSQL_HOST,

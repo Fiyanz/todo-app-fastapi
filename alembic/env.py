@@ -22,12 +22,15 @@ if config.config_file_name is not None:
 from app.core.config import settings
 from app.core.db import Base
 
-target_metadata = None
+target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
+
+section = config.config_ini_section
+config.set_section_option(section, "sqlalchemy.url", settings.MYALCHEMY_DATABASE_URL)
 
 
 def run_migrations_offline() -> None:
