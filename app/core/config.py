@@ -20,7 +20,7 @@ class Settings(BaseSettings):
 
     DOMAIN: str = "localhost"
     ENVIRONMENT: Literal["local", "staging", "production"] = "local"
-    JST_TOKEN: str
+    JWT_TOKEN: str
     ALGORITHM: str
 
     API_PREFIX: str = "/api/v1"

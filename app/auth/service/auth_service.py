@@ -14,7 +14,7 @@ from app.user.service.user_service import get_user_by_email, get_user_by_usernam
 from typing import Annotated
 
 
-SECRET_CODE = settings.JST_TOKEN
+SECRET_CODE = settings.JWT_TOKEN
 ALGORITHM = settings.ALGORITHM
 
 oauth2 = OAuth2PasswordBearer(tokenUrl="/api/v1/token")
