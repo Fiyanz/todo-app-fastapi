@@ -2,14 +2,15 @@ import jwt
 from jwt.exceptions import InvalidTokenError
 from app.core.config import settings
 from app.core.db import get_session
-from app.auth.model.auth_model import TokerData
-from app.auth.uttil.pass_hash import verify_pass
+from app.auth.model.auth_model import TokerData, SignUpData, SignINData
+from app.auth.uttil.pass_hash import verify_pass, pass_hash
 from fastapi.security import OAuth2PasswordBearer
 from fastapi import Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta, timezone
 from app.user.model.user_model import User
-from app.user.service.user_service import get_user_by_email
+from app.user.schema.user_schema import UserCreate
+from app.user.service.user_service import get_user_by_email, get_user_by_username
 from typing import Annotated
 
 
@@ -18,8 +19,8 @@ ALGORITHM = settings.ALGORITHM
 
 oauth2 = OAuth2PasswordBearer(tokenUrl="/api/v1/token")
 
-def authenticate_user(db: Session = Depends(get_session), email_user: str = None, password: str = None):
-    user = get_user_by_email(db, email_user)
+def authenticate_user(db: Session = Depends(get_session), username_user: str = None, password: str = None):
+    user = get_user_by_username(db, username_user)
     if not user: return None
     if not verify_pass(password, user.password):
         return None
@@ -45,14 +46,14 @@ async def get_current_user(token: Annotated[str, Depends(oauth2)], db: Session =
     )
     try:
         pyload = jwt.decode(token, SECRET_CODE, algorithms=ALGORITHM)
-        email = pyload.get("sub")
-        if email is None:
+        username = pyload.get("sub")
+        if username is None:
             raise credentials_exception
-        token_data = TokerData(email=email)
+        token_data = TokerData(username=username)
     except InvalidTokenError:
         raise credentials_exception
 
-    user = get_user_by_email(db, token_data.email)
+    user = get_user_by_username(db, token_data.username)
     if user is None:
         raise credentials_exception
     return user

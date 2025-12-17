@@ -5,9 +5,17 @@ from sqlalchemy import pool
 
 from alembic import context
 
+from app.core.config import settings
+from app.core.db import Base
+from app.user.model import user_model
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
+config.set_main_option(
+    "sqlalchemy.url",
+    str(settings.MYALCHEMY_DATABASE_URL)
+)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
@@ -19,9 +27,6 @@ if config.config_file_name is not None:
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 
-from app.core.config import settings
-from app.core.db import Base
-
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
@@ -29,8 +34,8 @@ target_metadata = Base.metadata
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 
-section = config.config_ini_section
-config.set_section_option(section, "sqlalchemy.url", settings.MYALCHEMY_DATABASE_URL)
+# section = config.config_ini_section
+# config.set_section_option(section, "sqlalchemy.url", settings.MYALCHEMY_DATABASE_URL)
 
 
 def run_migrations_offline() -> None:
@@ -45,7 +50,7 @@ def run_migrations_offline() -> None:
     script output.
 
     """
-    url = config.get_main_option("sqlalchemy.url")
+    url = settings.MYALCHEMY_DATABASE_URL
     context.configure(
         url=url,
         target_metadata=target_metadata,

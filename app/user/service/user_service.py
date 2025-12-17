@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from app.auth.uttil.pass_hash import pass_hash
@@ -15,11 +16,20 @@ def get_user(db: Session, user_id: int):
 def get_user_by_email(db: Session, user_email: str):
     return db.query(User).filter(User.email == user_email).first()
 
+def get_user_by_username(db: Session, user_username: str):
+    return db.query(User).filter(User.username == user_username).first()
+
 def create_user(db: Session, user: UserCreate):
+    user_data = db.query(User).filter(User.username == user.username).first()
+    if user_data:
+        raise HTTPException(
+            status_code=400,
+            detail="username already exists",
+        )
     db_user = User(
-        username=user.username,
-        email=user.email,
-        password=pass_hash(user.password)
+        username=user_data.username,
+        email=user_data.email,
+        password=pass_hash(user_data.password)
     )
     db.add(db_user)
     db.commit()

@@ -18,7 +18,7 @@ async def user_list(db: Session = Depends(get_session)):
 
 
 @user_router.get("/{user_id}", response_model=UserSchema)
-async def get_user_by_id(db: Session = Depends(get_session), user_id: int = None):
+async def get_user_by_id(user_id: int, db: Session = Depends(get_session)):
     user = await get_user(db, user_id)
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
@@ -26,13 +26,13 @@ async def get_user_by_id(db: Session = Depends(get_session), user_id: int = None
 
 
 @user_router.post("/", response_model=UserSchema)
-async def user_create(db: Session = Depends(get_session), user: UserCreate = None):
+async def user_create(user: UserCreate, db: Session = Depends(get_session)):
     user_data = await create_user(db, user)
     return user_data
 
 
 @user_router.delete("/{user_id}", response_model=UserSchema)
-async def user_delete(db: Session = Depends(get_session), user_id: int = None):
+async def user_delete(user_id: int, db: Session = Depends(get_session)):
     user = await delete_user(db, user_id)
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
