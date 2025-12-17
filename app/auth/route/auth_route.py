@@ -14,7 +14,7 @@ async def login_for_access_token(
         from_data: Annotated[OAuth2PasswordRequestForm,
         Depends()], db: Session = Depends(get_session)
     ) -> Token:
-    user = authenticate_user(db, from_data.email, from_data.password)
+    user = authenticate_user(db, from_data.username, from_data.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

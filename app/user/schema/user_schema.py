@@ -14,4 +14,3 @@ class UserSchema(UserBase):
 
     class Config:
         from_atributes = True
-        orm_mode = True
