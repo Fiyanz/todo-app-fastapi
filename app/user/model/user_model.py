@@ -1,13 +1,14 @@
 from sqlalchemy.testing.schema import mapped_column
-from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import Mapped, relationship
 from sqlalchemy import Integer, String, DateTime, Boolean
+from typing import List
 from app.core.db import Base
 
 from datetime import datetime, timezone
 
 
 class User(Base):
-    __tablename__ = "user"
+    __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, nullable=False)
     username: Mapped[str] = mapped_column(String(255), nullable=False)
@@ -19,6 +20,7 @@ class User(Base):
     created_at: Mapped[DateTime] = mapped_column(DateTime, default=datetime.now(timezone.utc))
     updated_at: Mapped[DateTime] = mapped_column(DateTime, default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc))
 
+    todos: Mapped[List["Todo"]] = relationship(back_populates="owner")
 
 # id SERIAL PRIMARY KEY,
 # username VARCHAR(50) UNIQUE NOT NULL,
