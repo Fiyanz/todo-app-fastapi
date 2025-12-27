@@ -2,7 +2,7 @@ import jwt
 from jwt.exceptions import InvalidTokenError
 from app.core.config import settings
 from app.core.db import get_session
-from app.auth.model.auth_model import TokerData, SignUpData, SignINData
+from app.auth.model.auth_model import TokenData, RefreshToken
 from app.auth.uttil.pass_hash import verify_pass, pass_hash
 from fastapi.security import OAuth2PasswordBearer
 from fastapi import Depends, HTTPException, status
@@ -24,10 +24,10 @@ def authenticate_user(db: Session = Depends(get_session), username_user: str = N
     if not user: return None
     if not verify_pass(password, user.password):
         return None
-    return None
+    return user
 
 
-def create_access_token(data: dict, expires_delta: timedelta | None = None):
+def create_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
@@ -49,7 +49,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2)], db: Session =
         username = pyload.get("sub")
         if username is None:
             raise credentials_exception
-        token_data = TokerData(username=username)
+        token_data = TokenData(username=username)
     except InvalidTokenError:
         raise credentials_exception
 

@@ -1,6 +1,5 @@
 from app.core.db import Base
-from sqlalchemy.orm import Mapped, relationship
-from sqlalchemy.testing.schema import mapped_column
+from sqlalchemy.orm import Mapped, relationship, mapped_column
 from sqlalchemy import String, DateTime, Integer, ForeignKey, Column, Boolean, Text, func
 from datetime import datetime, timezone
 from app.user.model.user_model import User

@@ -4,6 +4,8 @@ from starlette.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.auth.route.auth_route import auth_router
 from app.user.route.user_route import user_router
+from app.user.model.user_model import User
+from app.todo.model.todo_model import Todo
 
 openapi_tags = [
     {

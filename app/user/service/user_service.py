@@ -27,9 +27,9 @@ def create_user(db: Session, user: UserCreate):
             detail="username already exists",
         )
     db_user = User(
-        username=user_data.username,
-        email=user_data.email,
-        password=pass_hash(user_data.password)
+        username=user.username,
+        email=user.email,
+        password=pass_hash(user.password)
     )
     db.add(db_user)
     db.commit()
